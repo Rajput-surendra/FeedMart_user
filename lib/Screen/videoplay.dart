@@ -1,8 +1,13 @@
+import 'dart:convert';
+
+import 'package:eshop_multivendor/Helper/Constant.dart';
+import 'package:eshop_multivendor/Model/GetVideoModel.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 import '../Helper/Color.dart';
 import 'NotificationLIst.dart';
+import 'package:http/http.dart'as http;
 class VideoPlay extends StatefulWidget {
   const VideoPlay({Key? key}) : super(key: key);
 
@@ -20,8 +25,9 @@ class _VideoPlayState extends State<VideoPlay> {
 
   @override
   void initState() {
+    getVideo();
     controller = VideoPlayerController.network(
-        'https://developmentalphawizz.com/feedmart/uploads/videos/products.mp4')
+        'https://developmentalphawizz.com/feedmart/uploads/media/2022/WhatsApp_Video_2022-09-16_at_3_49_19_PM_(1).mp4')
       ..initialize().then((_) {
         controller.pause();
         controller.setVolume(5);
@@ -54,6 +60,29 @@ class _VideoPlayState extends State<VideoPlay> {
     videocontroller.pause();
     controller.pause();
     annimalcontroller.pause();
+  }
+  GetVideoModel?  getModel;
+  getVideo() async {
+    var headers = {
+      'Cookie': 'ci_session=1d251b8a96c0de2bfca75ce62fa18a44634a5fca'
+    };
+    var request = http.Request('GET', Uri.parse('$baseUrl/get_video'));
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var finalRes = await response.stream.bytesToString();
+      final jsonResponse = GetVideoModel.fromJson(json.decode(finalRes));
+      setState(() {
+        getModel = jsonResponse;
+      });
+    }
+    else {
+    print(response.reasonPhrase);
+    }
+
   }
   @override
   Widget build(BuildContext context) {

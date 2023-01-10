@@ -39,6 +39,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:version/version.dart';
+import '../Model/PrimeProductModel.dart';
 import 'Login.dart';
 import 'ProductList.dart';
 import 'Product_Detail.dart';
@@ -94,6 +95,10 @@ getData()async{
 
   void initState() {
     super.initState();
+    Future.delayed(Duration(milliseconds: 500
+    ),(){
+      getPrimeProduct();
+    });
     Future.delayed(Duration(
       seconds: 5
     ), (){
@@ -427,7 +432,10 @@ getData()async{
                         _slider(),
                         // playviedo(),
                         _section(),
-                        SizedBox(height: 10,)
+                        SizedBox(height: 10,),
+                        //primeProduct()
+
+
                         // _seller()
                       ],
                     ),
@@ -882,7 +890,7 @@ getData()async{
     );
   }
 
-  _getSection(int i) {
+   _getSection(int i) {
     var orient = MediaQuery.of(context).orientation;
 
     return sectionList[i].style == DEFAULT
@@ -1188,9 +1196,9 @@ getData()async{
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 10,left: 8),
-                child: Text("Weight: ${sectionList[secPos].productList![index].prVarientList![0].weight}"
+                child: Text("Size: ${sectionList[secPos].productList![index].prVarientList![0].weight}"
                     " ${sectionList[secPos].productList![index].prVarientList![0].unit_text!}"
-                  ,style: TextStyle(fontWeight: FontWeight.bold,color: colors.blackTemp.withOpacity(0.5)),),
+                  ,style: TextStyle(fontWeight: FontWeight.normal,color: colors.blackTemp),),
               ),
 
               Padding(
@@ -1198,7 +1206,7 @@ getData()async{
                 child: Text(
                   "Offer Price: " + CUR_CURRENCY! + "" + price.toString(),
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.fontColor.withOpacity(0.5),
+                    color: Theme.of(context).colorScheme.black,
                     fontWeight: FontWeight.bold,
                     fontSize: 15
                   ),
@@ -1304,6 +1312,49 @@ getData()async{
       return Container();
   }
 
+  PrimeProductModel? PrimeModel;
+  getPrimeProduct() async {
+    var headers = {
+      'Cookie': 'ci_session=1cf2fc55e4f5c88fe4595b902af453a1fbdf50ce'
+    };
+    var request = http.Request('POST', Uri.parse('$baseUrl/get_prime_products'));
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var Result = await response.stream.bytesToString();
+      final FinalResult = PrimeProductModel.fromJson(jsonDecode(Result));
+      print("New+++++++++++++++++++++++${FinalResult.toString()}");
+      setState(() {
+        PrimeModel = FinalResult;
+      });
+    }
+    else {
+    print(response.reasonPhrase);
+    }
+
+  }
+  primeProduct(){
+    return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+      physics:ScrollPhysics(),
+        itemCount: PrimeModel!.data!.length,
+      itemBuilder: (context, i) {
+        print("here");
+        return Card(color: colors.red,
+          child: Column(
+            children: [
+              Text("SSSSSSSSSSSS${PrimeModel!.data![i].name}")
+            ],
+          ),
+        );
+      },
+
+    );
+  }
   _section() {
     return Selector<HomeProvider, bool>(
       builder: (context, data, child) {

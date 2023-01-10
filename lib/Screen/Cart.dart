@@ -113,6 +113,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
   String? totalamount;
   String? remainingAmount;
   String? advanceAmount;
+  String? advancePercentage;
     RadioModel? radioData;
   //List<PaymentItem> _gpaytItems = [];
   //Pay _gpayClient;
@@ -508,11 +509,12 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                       shape:RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomRight: Radius.circular(10),topRight:Radius.circular(10))),
                       margin: EdgeInsets.zero,
                       child: Container(
-                        height: 90,
+                        // height:MediaQuery.of(context).size.height/7,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10)
                         ),
                         child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Row(
@@ -537,22 +539,34 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 20.0),
-                                  child: GestureDetector(
-                                    child: Image.asset("assets/images/deleteicon.png",height: 40,width: 40,),
-                                    onTap: () {
-                                      print(index);
-                                      print(cartList);
-                                      print(selectedPos);
-                                      if (context.read<CartProvider>().isProgress ==
-                                          false)
-                                        // removeFromCart(index, true, cartList, false,
-                                        //     selectedPos);
-                                        removeCart(cartList[index].varientId.toString());
-                                    },
+                                  padding: const EdgeInsets.only(top: 5,right: 5),
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5)
+                                    ),
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: GestureDetector(
+                                        child: Center(child: Icon(Icons.delete_forever,color: Colors.red)),
+                                        onTap: () {
+                                          print(index);
+                                          print(cartList);
+                                          print(selectedPos);
+                                          if (context.read<CartProvider>().isProgress ==
+                                              false)
+                                            // removeFromCart(index, true, cartList, false,
+                                            //     selectedPos);
+                                            removeCart(cartList[index].varientId.toString());
+                                        },
+                                      ),
+                                    ),
                                   ),
                                 )
                               ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text("Size: ${cartList[index].productList![0].weight}",style: TextStyle(color: colors.blackTemp),),
                             ),
                             cartList[index]
                                 .productList![0]
@@ -604,34 +618,41 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                                 : Container(),
                             Padding(
                               padding: const EdgeInsets.only(left: 10,),
-                              child: Row(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
                                     double.parse(cartList[index]
                                         .productList![0]
                                         .prVarientList![selectedPos]
-                                        .disPrice!) !=
+                                        .price!) !=
                                         0
-                                        ? CUR_CURRENCY! +
+                                        ?  "Offer Price: " + CUR_CURRENCY! +
                                         "" +
                                         cartList[index]
                                             .productList![0]
                                             .prVarientList![selectedPos]
-                                            .price!
+                                            .disPrice!
                                         : "",
                                     style: Theme.of(context)
                                         .textTheme
                                         .overline!
                                         .copyWith(
                                         decoration: TextDecoration.lineThrough,
+                                        fontWeight: FontWeight.bold,
+                                        color: colors.blackTemp,
+                                        fontSize: 14,
                                         letterSpacing: 0.7),
                                   ),
-                                  Text(
-                                    " " + CUR_CURRENCY! + " " + price.toString(),
+                                  Text("MRP: $CUR_CURRENCY ${cartList[index]
+                                      .productList![0]
+                                      .prVarientList![selectedPos]
+                                      .price!}",
+                                    // " MRP:" + CUR_CURRENCY! + " " + price.toString(),
                                     style: TextStyle(
                                         color:
                                         Theme.of(context).colorScheme.fontColor,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.normal),
                                   ),
                                 ],
                               ),
@@ -1396,6 +1417,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                                 ),
                               ),
                             ),
+
                             // GestureDetector(
                             //   child: Padding(
                             //     padding: const EdgeInsetsDirectional.only(
@@ -1415,6 +1437,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                             // )
                           ],
                         ),
+                        Text("Size:${cartList[index].productList![0].weight!}",style: TextStyle(color: colors.blackTemp),),
                         cartList[index]
                             .productList![0]
                             .prVarientList![selectedPos]
@@ -1430,19 +1453,19 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                             shrinkWrap: true,
                             itemCount: att.length,
                             itemBuilder: (context, index) {
-                              return Row(children: [
-                                Flexible(
-                                  child: Text(
-                                    att[index].trim() + ":",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .subtitle2!
-                                        .copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .lightBlack,
-                                    ),
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                Text(
+                                  att[index].trim() + ":",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2!
+                                      .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .lightBlack,
                                   ),
                                 ),
                                 Padding(
@@ -1463,173 +1486,169 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                               ]);
                             })
                             : Container(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Flexible(
-                                    child: Text(
-                                      double.parse(cartList[index]
-                                          .productList![0]
-                                          .prVarientList![selectedPos]
-                                          .disPrice!) !=
-                                          0
-                                          ? CUR_CURRENCY! +
-                                          "" +
-                                          cartList[index]
-                                              .productList![0]
-                                              .prVarientList![selectedPos]
-                                              .price!
-                                          : "",
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .overline!
-                                          .copyWith(
-                                          decoration:
-                                          TextDecoration.lineThrough,
-                                          letterSpacing: 0.7),
-                                    ),
-                                  ),
-                                  Text(
-                                    " " +
-                                        CUR_CURRENCY! +
-                                        " " +
-                                        price.toString(),
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .fontColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              double.parse(cartList[index].productList![0]
+                                  .prVarientList![selectedPos]
+                                  .price!) !=
+                                  0
+                                  ?  "Offer Price:"+CUR_CURRENCY! +
+                                  " " +
+                                  cartList[index]
+                                      .productList![0]
+                                      .prVarientList![selectedPos]
+                                      .disPrice!
+                                  : "",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .overline!
+                                  .copyWith(
+                                  decoration:
+                                  TextDecoration.lineThrough,
+                                  fontWeight: FontWeight.bold,
+                                   color: colors.blackTemp,
+                                  fontSize: 14,
+                                  letterSpacing: 0.7),
                             ),
-                            cartList[index].productList![0].availability ==
-                                "1" ||
-                                cartList[index].productList![0].stockType ==
-                                    "null"
-                                ? Row(
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    // GestureDetector(
-                                    //   child: Card(
-                                    //     shape: RoundedRectangleBorder(
-                                    //       borderRadius:
-                                    //           BorderRadius.circular(50),
-                                    //     ),
-                                    //     child: Padding(
-                                    //       padding:
-                                    //           const EdgeInsets.all(8.0),
-                                    //       child: Icon(
-                                    //         Icons.remove,
-                                    //         size: 15,
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    //   onTap: () {
-                                    //     if (context
-                                    //             .read<CartProvider>()
-                                    //             .isProgress ==
-                                    //         false)
-                                    //       removeFromCartCheckout(
-                                    //           index, false, cartList);
-                                    //   },
-                                    // ),
-                                    Container(
-                                      width: 26,
-                                      height: 20,
-                                      child: Stack(
-                                        children: [
-                                          TextField(
-                                            textAlign: TextAlign.center,
-                                            readOnly: true,
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .fontColor),
-                                            controller:
-                                            _controller[index],
-                                            decoration: InputDecoration(
-                                              border: InputBorder.none,
-                                            ),
-                                          ),
-                                          // PopupMenuButton<String>(
-                                          //   tooltip: '',
-                                          //   icon: const Icon(
-                                          //     Icons.arrow_drop_down,
-                                          //     size: 1,
-                                          //   ),
-                                          //   onSelected: (String value) {
-                                          //     addToCartCheckout(
-                                          //         index, value, cartList);
-                                          //   },
-                                          //   itemBuilder:
-                                          //       (BuildContext context) {
-                                          //     return cartList[index]
-                                          //         .productList![0]
-                                          //         .itemsCounter!
-                                          //         .map<
-                                          //                 PopupMenuItem<
-                                          //                     String>>(
-                                          //             (String value) {
-                                          //       return new PopupMenuItem(
-                                          //           child: new Text(
-                                          //             value,
-                                          //             style: TextStyle(
-                                          //                 color: Theme.of(
-                                          //                         context)
-                                          //                     .colorScheme
-                                          //                     .fontColor),
-                                          //           ),
-                                          //           value: value);
-                                          //     }).toList();
-                                          //   },
-                                          // ),
-                                        ],
-                                      ),
-                                    ),
-                                    // GestureDetector(
-                                    //   child: Card(
-                                    //     shape: RoundedRectangleBorder(
-                                    //       borderRadius:
-                                    //           BorderRadius.circular(50),
-                                    //     ),
-                                    //     child: Padding(
-                                    //       padding:
-                                    //           const EdgeInsets.all(8.0),
-                                    //       child: Icon(
-                                    //         Icons.add,
-                                    //         size: 15,
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    //   onTap: () {
-                                    //     addToCartCheckout(
-                                    //         index,
-                                    //         (int.parse(cartList[index]
-                                    //                     .qty!) +
-                                    //                 int.parse(cartList[
-                                    //                         index]
-                                    //                     .productList![0]
-                                    //                     .qtyStepSize!))
-                                    //             .toString(),
-                                    //         cartList);
-                                    //   },
-                                    // )
-                                  ],
-                                ),
-                              ],
-                            )
-                                : Container(),
+                            Text("MRP: $CUR_CURRENCY${ cartList[index]
+                                .productList![0]
+                                .prVarientList![selectedPos]
+                                .price!}",
+                              // " MRP:" +
+                              //     CUR_CURRENCY! +
+                              //     " " +
+                              //     price.toString(),
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .fontColor,
+                                  fontWeight: FontWeight.normal),
+                            ),
                           ],
                         ),
+                        cartList[index].productList![0].availability ==
+                            "1" ||
+                            cartList[index].productList![0].stockType ==
+                                "null"
+                            ? Row(
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                // GestureDetector(
+                                //   child: Card(
+                                //     shape: RoundedRectangleBorder(
+                                //       borderRadius:
+                                //           BorderRadius.circular(50),
+                                //     ),
+                                //     child: Padding(
+                                //       padding:
+                                //           const EdgeInsets.all(8.0),
+                                //       child: Icon(
+                                //         Icons.remove,
+                                //         size: 15,
+                                //       ),
+                                //     ),
+                                //   ),
+                                //   onTap: () {
+                                //     if (context
+                                //             .read<CartProvider>()
+                                //             .isProgress ==
+                                //         false)
+                                //       removeFromCartCheckout(
+                                //           index, false, cartList);
+                                //   },
+                                // ),
+                                Container(
+                                  width: 26,
+                                  height: 20,
+                                  child: Stack(
+                                    children: [
+                                      TextField(
+                                        textAlign: TextAlign.center,
+                                        readOnly: true,
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .fontColor),
+                                        controller:
+                                        _controller[index],
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                        ),
+                                      ),
+                                      // PopupMenuButton<String>(
+                                      //   tooltip: '',
+                                      //   icon: const Icon(
+                                      //     Icons.arrow_drop_down,
+                                      //     size: 1,
+                                      //   ),
+                                      //   onSelected: (String value) {
+                                      //     addToCartCheckout(
+                                      //         index, value, cartList);
+                                      //   },
+                                      //   itemBuilder:
+                                      //       (BuildContext context) {
+                                      //     return cartList[index]
+                                      //         .productList![0]
+                                      //         .itemsCounter!
+                                      //         .map<
+                                      //                 PopupMenuItem<
+                                      //                     String>>(
+                                      //             (String value) {
+                                      //       return new PopupMenuItem(
+                                      //           child: new Text(
+                                      //             value,
+                                      //             style: TextStyle(
+                                      //                 color: Theme.of(
+                                      //                         context)
+                                      //                     .colorScheme
+                                      //                     .fontColor),
+                                      //           ),
+                                      //           value: value);
+                                      //     }).toList();
+                                      //   },
+                                      // ),
+                                    ],
+                                  ),
+                                ),
+                                // GestureDetector(
+                                //   child: Card(
+                                //     shape: RoundedRectangleBorder(
+                                //       borderRadius:
+                                //           BorderRadius.circular(50),
+                                //     ),
+                                //     child: Padding(
+                                //       padding:
+                                //           const EdgeInsets.all(8.0),
+                                //       child: Icon(
+                                //         Icons.add,
+                                //         size: 15,
+                                //       ),
+                                //     ),
+                                //   ),
+                                //   onTap: () {
+                                //     addToCartCheckout(
+                                //         index,
+                                //         (int.parse(cartList[index]
+                                //                     .qty!) +
+                                //                 int.parse(cartList[
+                                //                         index]
+                                //                     .productList![0]
+                                //                     .qtyStepSize!))
+                                //             .toString(),
+                                //         cartList);
+                                //   },
+                                // )
+                              ],
+                            ),
+                          ],
+                        )
+                            : Container(),
                       ],
                     ),
                   ),
@@ -2002,6 +2021,8 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
              print("final Amount ${finalAmount}");
             remainingAmount = getdata['remaining_amount'];
             advanceAmount = getdata['advance_amount'];
+            advancePercentage = getdata["advance_percentage"];
+            print("advancePercentage================> : $advancePercentage");
             print("Cart aMOUBT================> : $totalamount");
             amount = double.parse(advanceAmount.toString()) ;
             //sellerId = data[0]["product_details"][0]["seller_id"];
@@ -3193,8 +3214,9 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         address(),
-                                        orderSummary(cartList),
+
                                         cartItems(cartList),
+                                        orderSummary(cartList),
                                         // promo(),
                                         payment(),
                                       ],
@@ -4427,10 +4449,10 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
               ),
               Row(
                 mainAxisAlignment:
-                MainAxisAlignment.spaceBetween,
+               MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    getTranslated(context, 'MINIMUM_PAYMENT')!,
+                    getTranslated(context, 'MINIMUM_PAYMENT')!+ " (${advancePercentage}%)",
                     style: Theme.of(context)
                         .textTheme
                         .subtitle2!
@@ -4439,6 +4461,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                             .colorScheme
                             .fontColor,fontWeight: FontWeight.normal),
                   ),
+
                  payMethod == "Cash On Delivery" ?    Text(
                    CUR_CURRENCY! +
                        " " +
@@ -4454,7 +4477,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                  ) : Text(
                     CUR_CURRENCY! +
                         " " +
-                        advanceAmount.toString(),
+                        "${advanceAmount.toString()}",
                     style: Theme.of(context)
                         .textTheme
                         .subtitle2!
@@ -4633,6 +4656,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
     showGeneralDialog(
         barrierColor: Theme.of(context).colorScheme.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
+
           return Transform.scale(
             scale: a1.value,
             child: Opacity(
@@ -4679,6 +4703,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                                             .colorScheme
                                             .lightBlack2),
                                   ),
+                               // Text("${advancePercentage.toString}"),
                                 payMethod == "Cash On Delivery" ?  Text(
                                   CUR_CURRENCY! +
                                       " " +

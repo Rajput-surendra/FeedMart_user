@@ -318,7 +318,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(top: 30.0),
+                      padding: const EdgeInsets.only(top: 10.0),
                       child: Hero(
                           tag: "ProList$index${model.id}",
                           child: ClipRRect(
@@ -336,8 +336,8 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                                       child: FadeInImage(
                                         image: NetworkImage(
                                             model.image!),
-                                        height: 110.0,
-                                        width: 105.0,
+                                        height: 150.0,
+                                        width: 115.0,
                                         fit: BoxFit.cover,
                                         imageErrorBuilder:
                                             (context, error, stackTrace) =>
@@ -411,7 +411,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                     ),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 40.0),
+                        padding: const EdgeInsets.only(top: 20.0),
                         child: Card(
                           elevation: 0,
                           shape: RoundedRectangleBorder(
@@ -419,7 +419,6 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                           ),
                           margin: EdgeInsets.zero,
                           child: Container(
-                            height:MediaQuery.of(context).size.height/8,
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               //mainAxisAlignment: MainAxisAlignment.center,
@@ -510,10 +509,15 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                                   ],
                                 ),
                                 Padding(
+                                  padding: const EdgeInsets.only(left: 15,top: 5),
+                                  child: Text("Size:${model.weight}",style: TextStyle(color: colors.blackTemp),),
+                                ),
+                                Padding(
                                   padding: const EdgeInsets.only(left: 15),
-                                  child: Row(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      Text(
+                                      Text( "Offer Price: " +
                                           CUR_CURRENCY! +
                                               " " +
                                               price.toString() +
@@ -532,7 +536,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                                         model.selVarient!]
                                             .disPrice!) !=
                                             0
-                                            ? CUR_CURRENCY! +
+                                            ? " MRP: "+ CUR_CURRENCY! +
                                             "" +
                                             model
                                                 .prVarientList![
@@ -543,11 +547,11 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                                             .textTheme
                                             .overline!
                                             .copyWith(
-                                            decoration:
-                                            TextDecoration.lineThrough,
+                                            // decoration:
+                                            // TextDecoration.lineThrough,
                                             letterSpacing: 0,
                                             fontSize: 15,
-                                            fontWeight: FontWeight.bold
+                                            fontWeight: FontWeight.normal
                                         ),
                                       ),
                                     ],

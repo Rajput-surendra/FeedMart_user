@@ -531,90 +531,98 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
   }
 
   _price(pos, from) {
+    print("WWWWWWWWWWWWWWW${widget.model!.prVarientList![0].weight}");
     double price = double.parse(widget.model!.prVarientList![pos].disPrice!);
     if (price == 0)
       price = double.parse(widget.model!.prVarientList![pos].price!);
 
+
     return Padding(
+
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            CUR_CURRENCY! + " " + price.toString(),
-            //style: Theme.of(context).textTheme.headline6,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.fontColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
-          ),
-          from
-              ? Padding(
-                  padding: const EdgeInsetsDirectional.only(
-                      start: 3.0, bottom: 5, top: 3),
-                  child: widget.model!.availability == "0"
-                      ? Container()
-                      : Row(
-                          children: <Widget>[
-                            GestureDetector(
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
+          Text("Size:${widget.model!.prVarientList![0].weight}",style: TextStyle(fontSize: 14),),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+
+              Text(
+                "Offer Price" + CUR_CURRENCY! + " " + price.toString(),
+                //style: Theme.of(context).textTheme.headline6,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.fontColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+              from
+                  ? Padding(
+                padding: const EdgeInsetsDirectional.only(
+                    start: 3.0, bottom: 5, top: 3),
+                child: widget.model!.availability == "0"
+                    ? Container()
+                    : Row(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.remove,
+                            size: 15,
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        if (_isProgress == false &&
+                            (int.parse(qtyController.text)) > 0)
+                          removeFromCart();
+                      },
+                    ),
+                    Container(
+                      width: 37,
+                      height: 20,
+                      color: Colors.transparent,
+                      child: Stack(
+                        children: [
+                          Selector<CartProvider,
+                              Tuple2<List<dynamic>, List<dynamic>>>(
+                            builder: (context, data, child) {
+                              setVariant == false
+                                  ? qtyController.text = data.item1
+                                  .contains(widget.model!.id)
+                                  ? data.item2[data.item1
+                                  .indexWhere((element) =>
+                              element ==
+                                  widget.model!.id)]
+                                  .toString()
+                                  : "0"
+                                  : "0";
+                              return TextField(
+                                textAlign: TextAlign.center,
+                                readOnly: true,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .fontColor,
+                                    fontWeight: FontWeight.bold),
+                                controller: qtyController,
+                                // _controller[index],
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Icon(
-                                    Icons.remove,
-                                    size: 15,
-                                  ),
-                                ),
-                              ),
-                              onTap: () {
-                                if (_isProgress == false &&
-                                    (int.parse(qtyController.text)) > 0)
-                                  removeFromCart();
-                              },
-                            ),
-                            Container(
-                              width: 37,
-                              height: 20,
-                              color: Colors.transparent,
-                              child: Stack(
-                                children: [
-                                  Selector<CartProvider,
-                                      Tuple2<List<dynamic>, List<dynamic>>>(
-                                    builder: (context, data, child) {
-                                      setVariant == false
-                                          ? qtyController.text = data.item1
-                                                  .contains(widget.model!.id)
-                                              ? data.item2[data.item1
-                                                      .indexWhere((element) =>
-                                                          element ==
-                                                          widget.model!.id)]
-                                                  .toString()
-                                              : "0"
-                                          : "0";
-                                      return TextField(
-                                        textAlign: TextAlign.center,
-                                        readOnly: true,
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .fontColor,
-                                            fontWeight: FontWeight.bold),
-                                        controller: qtyController,
-                                        // _controller[index],
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                        ),
-                                      );
-                                    },
-                                    selector: (_, provider) => Tuple2(
-                                        provider.cartIdList, provider.qtyList),
-                                  ),
-                                  /*    TextField(
+                              );
+                            },
+                            selector: (_, provider) => Tuple2(
+                                provider.cartIdList, provider.qtyList),
+                          ),
+                          /*    TextField(
                             textAlign: TextAlign.center,
                             readOnly: true,
                             style: TextStyle(
@@ -626,41 +634,44 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                               border: InputBorder.none,
                             ),
                           ),*/
-                                ],
-                              ),
-                            ), // ),
+                        ],
+                      ),
+                    ), // ),
 
-                            GestureDetector(
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Icon(
-                                    Icons.add,
-                                    size: 15,
-                                  ),
-                                ),
-                              ),
-                              onTap: () {
-                                print(
-                                    "New QUUUUUUUUUUUU_______ ${widget.model?.qtyStepSize}");
-                                if (_isProgress == false)
-                                  addToCart(
-                                      (int.parse(qtyController.text) +
-                                              int.parse(
-                                                  widget.model!.qtyStepSize!))
-                                          .toString(),
-                                      false);
-                              },
-                            )
-                          ],
+                    GestureDetector(
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
                         ),
-                )
-              : Container(),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.add,
+                            size: 15,
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        print(
+                            "New QUUUUUUUUUUUU_______ ${widget.model?.qtyStepSize}");
+                        if (_isProgress == false)
+                          addToCart(
+                              (int.parse(qtyController.text) +
+                                  int.parse(
+                                      widget.model!.qtyStepSize!))
+                                  .toString(),
+                              false);
+                      },
+                    )
+                  ],
+                ),
+              )
+                  : Container(),
+            ],
+          ),
         ],
-      ),
+      )
+
     );
   }
 
@@ -750,25 +761,32 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
 
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: Row(
-          children: <Widget>[
-            Text(
-              CUR_CURRENCY! + " " + widget.model!.prVarientList![pos].price!,
-              style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                  decoration: TextDecoration.lineThrough,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
-            ),
-            Text(
-              " | " + off.toStringAsFixed(2) + "% off",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
+        child: Column(
+          children: [
+
+            Row(
+              children: <Widget>[
+                Text("MRP: "+
+                    CUR_CURRENCY! + " " + widget.model!.prVarientList![pos].price!,
+                  style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                    //decoration: TextDecoration.lineThrough,
+                      fontSize: 18,
+                      fontWeight: FontWeight.normal),
+                ),
+                Text(
+                  " | " + off.toStringAsFixed(2) + "% off",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
+        )
+
+
       );
     } else {
       return Container();

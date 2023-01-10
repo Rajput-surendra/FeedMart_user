@@ -11,6 +11,7 @@ class SectionModel {
       qty,
       productId,
       perItemTotal,
+      advancePercentage,
       perItemPrice,
       style,
       shortDesc;
@@ -30,6 +31,7 @@ class SectionModel {
         this.shortDesc,
         this.productList,
         this.varientId,
+        this.advancePercentage,
         this.qty,
         this.productId,
         this.perItemTotal,
@@ -59,6 +61,7 @@ class SectionModel {
         delCharge: parsedJson[DEL_CHARGES],
         finalTotal:parsedJson['overall_amount'],
         sellerAvailable: parsedJson['is_seller_available'],
+        advancePercentage:parsedJson["advance_percentage"],
         shortDesc: parsedJson[SHORT_DESC],
         style: parsedJson[STYLE],
         productList: productList,
@@ -81,6 +84,7 @@ class SectionModel {
       perItemPrice: "0",
       productList: productList,
       delCharge: parsedJson[DEL_CHARGES],
+        //advancePercentage:parsedJson["advance_percentage"],
         sellerAvailable:parsedJson["is_seller_available"]
 
     );
@@ -101,6 +105,7 @@ class SectionModel {
 class Product {
   String? id,
       name,
+      weight,
       desc,
       image,
       catName,
@@ -163,6 +168,7 @@ class Product {
   Product(
       {this.id,
         this.name,
+        this.weight,
         this.desc,
         this.image,
         this.catName,
@@ -258,6 +264,7 @@ class Product {
     return new Product(
       id: json[ID],
       name: json[NAME],
+      weight:json["weight"],
       desc: json[DESC],
       image: json[IMAGE],
       catName: json[CAT_NAME],
@@ -280,6 +287,7 @@ class Product {
       shortDescription: json[SHORT],
       indicator: json[INDICATOR].toString(),
       instruction:json["instruction"].toString(),
+
       stockType: json[STOCKTYPE].toString(),
       tax: json[TAX_PER],
       total: json[TOTAL],
@@ -374,6 +382,7 @@ class Product_Varient {
       disPrice,
       unit_text,
       weight,
+      is_prime,
       type,
       attr_name,
       varient_value,
@@ -389,6 +398,7 @@ class Product_Varient {
         this.price,
         this.unit_text,
         this.weight,
+        this.is_prime,
         this.disPrice,
         this.attribute_value_ids,
         this.availability,
@@ -404,6 +414,7 @@ class Product_Varient {
         productId: json[PRODUCT_ID],
         unit_text: json['unit_text'],
         weight:json['weight'],
+        is_prime:json["is_prime"],
         attr_name: json[ATTR_NAME],
         varient_value: json[VARIENT_VALUE],
         disPrice: json[DIS_PRICE],
