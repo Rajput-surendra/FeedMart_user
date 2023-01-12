@@ -543,7 +543,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Size:${widget.model!.prVarientList![0].weight}",style: TextStyle(fontSize: 14),),
+          Text("Size:${widget.model!.prVarientList![0].weight} ${widget.model!.prVarientList![0].unittext}",style: TextStyle(fontSize: 14),),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

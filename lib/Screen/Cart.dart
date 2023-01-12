@@ -290,9 +290,9 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
     deviceWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        appBar: widget.fromBottom
-            ? null
-            : getSimpleAppBar(getTranslated(context, 'CART')!, context),
+        // appBar: widget.fromBottom
+        //     ? null
+        //     : getSimpleAppBar(getTranslated(context, 'CART')!, context),
         body: _isNetworkAvail
             ? Column(
           children: [
@@ -301,13 +301,13 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                 children: [
                   Expanded(
                     child: Container(
-                        height: 70,
+                        height: 80,
                         color: colors.whiteTemp,
                         child: Padding(
                           padding: const EdgeInsets.all(5),
                           child: Container(
                               child: Padding(
-                                padding: const EdgeInsets.only(top: 20,left: 10),
+                                padding: const EdgeInsets.only(top: 30,left: 10),
                                 child: Text("Cart",style: TextStyle(color: colors.secondary,fontSize: 20),),
                               )),
                         )
@@ -315,7 +315,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                   ),
                   Expanded(
                     child: Container(
-                        height: 70,
+                        height: 80,
                         color: colors.secondary,
                         child: Align(
                           child: Row(
@@ -327,7 +327,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                                   Navigator.push(context, MaterialPageRoute(builder: (context)=>NotificationList()));
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.only(right: 10),
+                                  padding: const EdgeInsets.only(right: 10,top: 5),
                                   child: Image.asset("assets/images/notifaction.png",height: 30,width: 30),
                                 ),
                               ),
@@ -566,7 +566,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10),
-                              child: Text("Size: ${cartList[index].productList![0].weight}",style: TextStyle(color: colors.blackTemp),),
+                              child: Text("Size: ${cartList[index].productList![0].weight} ${unittextt}",style: TextStyle(color: colors.blackTemp),),
                             ),
                             cartList[index]
                                 .productList![0]
@@ -1979,6 +1979,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
     var dCharge;
   String? overallAmount;
   String? finalAmount;
+  String? unittextt;
   Future<void> _getCart(String save) async {
     _isNetworkAvail = await isNetworkAvailable();
     SharedPreferences prefs   = await SharedPreferences.getInstance();
@@ -2022,6 +2023,8 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
             remainingAmount = getdata['remaining_amount'];
             advanceAmount = getdata['advance_amount'];
             advancePercentage = getdata["advance_percentage"];
+            unittextt = getdata["unit_text"];
+            print("advancePercentage================> : $unittextt");
             print("advancePercentage================> : $advancePercentage");
             print("Cart aMOUBT================> : $totalamount");
             amount = double.parse(advanceAmount.toString()) ;
@@ -4830,7 +4833,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                                   Text(
                                     CUR_CURRENCY! +
                                         " " +
-                                        dCharge,
+                                       "${dCharge.toString()}",
                                     style: Theme.of(context)
                                         .textTheme
                                         .subtitle2!

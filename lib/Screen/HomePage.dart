@@ -433,7 +433,12 @@ getData()async{
                         // playviedo(),
                         _section(),
                         SizedBox(height: 10,),
-                        //primeProduct()
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Prime Products",style: TextStyle(color: colors.blackTemp,fontSize:14,fontWeight: FontWeight.bold),),
+                        ),
+                        primeProduct(),
+                        SizedBox(height: 10,),
 
 
                         // _seller()
@@ -1197,7 +1202,7 @@ getData()async{
               Padding(
                 padding: const EdgeInsets.only(top: 10,left: 8),
                 child: Text("Size: ${sectionList[secPos].productList![index].prVarientList![0].weight}"
-                    " ${sectionList[secPos].productList![index].prVarientList![0].unit_text!}"
+                    " ${sectionList[secPos].productList![index].prVarientList![0].unittext!}"
                   ,style: TextStyle(fontWeight: FontWeight.normal,color: colors.blackTemp),),
               ),
 
@@ -1337,22 +1342,59 @@ getData()async{
 
   }
   primeProduct(){
-    return ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-      physics:ScrollPhysics(),
-        itemCount: PrimeModel!.data!.length,
-      itemBuilder: (context, i) {
-        print("here");
-        return Card(color: colors.red,
-          child: Column(
-            children: [
-              Text("SSSSSSSSSSSS${PrimeModel!.data![i].name}")
-            ],
-          ),
-        );
-      },
+    return Padding(
+      padding: const EdgeInsets.all(6.0),
+      child: Container(
+        height: MediaQuery.of(context).size.height/3.1,
+        child:PrimeModel == null?SizedBox.shrink(): ListView.builder(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+          physics:ScrollPhysics(),
+            itemCount: PrimeModel!.data!.length,
+          itemBuilder: (context, i) {
+            print("here");
+            return Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12)
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10))
+                    ),
+                      height: 120,
+                      width: 160,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                          child:PrimeModel!.data![i].image == null || PrimeModel!.data![i].image ==""?
+                          Image.asset("assets/images/placeholder.png"):
+                          Image.network("${PrimeModel!.data![i].image}",fit: BoxFit.fill,))),
+                          SizedBox(height: 3,),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("${PrimeModel!.data![i].name}",style: TextStyle(color: colors.primary,fontWeight: FontWeight.bold),),
+                        SizedBox(height: 5,),
+                        Text("Size: ${PrimeModel!.data![i].variants![0].weight} ${PrimeModel!.data![i].variants![0].unitText}",style: TextStyle(color: colors.blackTemp,fontWeight: FontWeight.normal),),
+                        SizedBox(height: 3,),
+                        Text("Offer Price: $CUR_CURRENCY ${PrimeModel!.data![i].variants![0].specialPrice}",style: TextStyle(color: colors.blackTemp,fontWeight: FontWeight.bold),),
+                        SizedBox(height: 3,),
+                        Text("MRP:$CUR_CURRENCY ${PrimeModel!.data![i].variants![0].price}",style: TextStyle(color: colors.blackTemp,fontWeight: FontWeight.normal),)
+                      ],
+                    ),
+                  )
 
+                ],
+              ),
+            );
+          },
+
+        ),
+      ),
     );
   }
   _section() {

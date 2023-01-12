@@ -273,6 +273,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
   }
 
   Widget listItem(int index) {
+
     if (index < productList.length) {
       Product model = productList[index];
       totalProduct = model.total;
@@ -304,8 +305,9 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
             100 /
             double.parse(model.prVarientList![model.selVarient!].price!);
       }
-
+      // print("${unittext.toString()}")
       return  Padding(
+
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 8),
         child: Stack(
           clipBehavior: Clip.none,
@@ -510,7 +512,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 15,top: 5),
-                                  child: Text("Size:${model.weight}",style: TextStyle(color: colors.blackTemp),),
+                                  child: Text("Size:${model.prVarientList![0].weight} ${model.prVarientList![0].unittext}",style: TextStyle(color: colors.blackTemp),),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 15),
@@ -1614,7 +1616,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
   getData()async{
    // prefs = await SharedPreferences.getInstance();
   }
-
+ var unittext;
   void getProduct(String top)async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? stateid = prefs.getString('stateId');
@@ -1662,6 +1664,8 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
 
           minPrice = getdata[MINPRICE];
           maxPrice = getdata[MAXPRICE];
+          unittext = getdata["unit_text"];
+          print("UUUUUUUUUUUUUUUUUUUUUUUUU${unittext.toString()}");
           _currentRangeValues =
               RangeValues(double.parse(minPrice), double.parse(maxPrice));
           _isFirstLoad = false;
